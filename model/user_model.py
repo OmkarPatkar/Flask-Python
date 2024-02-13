@@ -79,7 +79,10 @@ class user_model:
             self.cursor.execute(update_query, (name, phone, email, role, password, userid))
 
             print('User Record updated successfully')
-            return jsonify({'message': "User Record Updated Successfully"}), 201
+            if self.cursor.rowcount > 0:
+                return jsonify({'message': "User Record Updated Successfully"}), 201
+            else:
+                return jsonify({"message": "No Records to Update. Please provide correct id."}), 202
 
         except Exception as e:
             print(f'Error in updating user: {e}')
@@ -113,7 +116,22 @@ class user_model:
 
     def user_patch_model(self, data, id):
         try:
-            print(data, id)
-            return jsonify({'message': 'patch'})
+            query = "Update Users set "
+            for key in data:
+                query += f"{key}='{data[key]}',"
+            query = query[:-1] + f" Where id=?;"
+
+            self.cursor.execute(query, (id,))
+            print('User Record updated successfully')
+            if self.cursor.rowcount > 0:
+                return jsonify({'message': "User Record Updated Successfully"}), 201
+            else:
+                return jsonify({"message": "No Records to Update. Please provide correct id."}), 202
+
         except Exception as e:
             print(e)
+
+        # finally:
+        #     # Close cursor and connection
+        #     self.cursor.close()
+        #     self.conn.close()
