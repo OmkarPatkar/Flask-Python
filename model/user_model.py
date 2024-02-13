@@ -2,7 +2,8 @@ import json
 import pyodbc
 from flask import jsonify
 
-class user_model():
+
+class user_model:
     def __init__(self):
         try:
             self.conn = pyodbc.connect(
@@ -11,12 +12,11 @@ class user_model():
                 r'DATABASE=flask_app;'
                 r'Trusted_Connection=yes;'
             )
-            self.conn.autocommit=True
+            self.conn.autocommit = True
             self.cursor = self.conn.cursor()
             print('Connection Established Successfully')
         except Exception as e:
             print(f'Error in Connection : {e}')
-
 
     def user_getall_model(self):
         try:
@@ -33,7 +33,7 @@ class user_model():
                 return result
             else:
                 print("No Records Found.")
-                return jsonify({'message': 'No Records Found.'}),204
+                return jsonify({'message': 'No Records Found.'}), 204
         except Exception as e:
             print(f'Error in fetching users: {e}')
             return jsonify({'message': f'Error in fetching users: {e}'}), 500
@@ -55,7 +55,7 @@ class user_model():
             self.cursor.execute(insert_query, (name, phone, email, role, password))
 
             print('User created successfully')
-            return jsonify({'message': 'User created successfully'}),201
+            return jsonify({'message': 'User created successfully'}), 201
         except Exception as e:
             print(f'Error in creating user: {e}')
             return jsonify({'message': 'Failed to create user'}), 500
@@ -83,7 +83,7 @@ class user_model():
 
         except Exception as e:
             print(f'Error in updating user: {e}')
-            return jsonify({'message': 'Failed to update user'}),204
+            return jsonify({'message': 'Failed to update user'}), 204
         # finally:
         #     # Close cursor and connection
         #     self.cursor.close()
@@ -100,7 +100,8 @@ class user_model():
                 return jsonify({'message': "User Record deleted Successfully"}), 200
             else:
                 print('Error in deleting user record, Provided id is not present in the database.')
-                return jsonify({'message': "Error in deleting user record, Provided id is not present in the database."}), 204
+                return jsonify(
+                    {'message': "Error in deleting user record, Provided id is not present in the database."}), 204
 
         except Exception as e:
             print(f'Error in deleting user record: {e}')
@@ -112,6 +113,7 @@ class user_model():
 
     def user_patch_model(self, data, id):
         try:
-            return jsonify({'message':'patch'})
+            print(data, id)
+            return jsonify({'message': 'patch'})
         except Exception as e:
-            pass
+            print(e)
