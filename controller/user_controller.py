@@ -30,3 +30,8 @@ def user_delete_controller(id):
 @app.route("/user/patch/<int:id>", methods=["PATCH"])
 def user_patch_controller(id):
     return obj.user_patch_model(request.form, id)
+
+
+@app.route("/user/get_records/limit/<int:limit>/page/<int:page>", methods=["GET"])
+def user_pagination_controller(limit, page):
+    return obj.user_pagination_model(limit, page)

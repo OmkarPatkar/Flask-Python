@@ -30,10 +30,10 @@ class user_model:
                 print(row)
 
             if len(result) > 0:
-                return result
+                return jsonify({'Payload': result}), 200
             else:
-                print("No Records Found.")
-                return jsonify({'message': 'No Records Found.'}), 204
+                return jsonify({"message": "No Records Found."}), 204
+
         except Exception as e:
             print(f'Error in fetching users: {e}')
             return jsonify({'message': f'Error in fetching users: {e}'}), 500
@@ -133,5 +133,27 @@ class user_model:
 
         # finally:
         #     # Close cursor and connection
+        #     self.cursor.close()
+        #     self.conn.close()
+
+    def user_pagination_model(self, limit, page):
+        try:
+            start = (page - 1) * limit
+            query = f"SELECT * FROM Users ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;"
+            self.cursor.execute(query, (start, limit))
+            rows = self.cursor.fetchall()
+
+            result = [dict(zip([column[0] for column in self.cursor.description], row)) for row in rows]
+
+            if len(result) > 0:
+                return jsonify({'Payload': result, "page_no": page, "no_of_rocords": limit}), 200
+            else:
+                return jsonify({"message": "No Records Found."}), 204
+
+        except Exception as e:
+            print(f'Error in fetching records: {e}')
+            return jsonify({"message": "Internal Server Error"}), 500  # Use status code 500 for internal server error
+        # finally:
+        #     # Close cursor and connection in the finally block to ensure it is always executed
         #     self.cursor.close()
         #     self.conn.close()
