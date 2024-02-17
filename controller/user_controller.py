@@ -1,6 +1,9 @@
+import os.path
+
 from app import app
 from model.user_model import user_model
-from flask import request
+from flask import request, jsonify, send_from_directory
+from datetime import datetime
 
 obj = user_model()
 
@@ -35,3 +38,46 @@ def user_patch_controller(id):
 @app.route("/user/get_records/limit/<int:limit>/page/<int:page>", methods=["GET"])
 def user_pagination_controller(limit, page):
     return obj.user_pagination_model(limit, page)
+
+
+@app.route("/user/<int:uid>/upload/avatar", methods=["PUT"])
+def user_upload_avatar_controller(uid):
+    try:
+        if not request.files:
+            return jsonify({'error': 'No file in the request'}), 400
+
+        file = request.files['avatar']
+        print(file)
+
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+
+        upload_dir = "uploads"
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+
+        # create unique name using timestamp
+        unique_filename = str(datetime.now().timestamp()).replace('.', '')
+        # create filename with extension
+        filename_with_extension = f"{unique_filename}.{file.filename.split('.')[-1]}"
+        print(filename_with_extension)
+        # absolute path for the file
+        file_with_path = os.path.join(upload_dir, filename_with_extension)
+        # print(file_with_path)
+        # save the file
+        file.save(file_with_path)
+        # upload the file to database
+        obj.user_upload_avatar_model(uid, file_with_path)
+
+        return jsonify({'message': 'File uploaded successfully', 'filename': filename_with_extension}), 200
+
+    except Exception as e:
+        return jsonify({'error': f'Error: {e}'}), 500
+
+
+@app.route("/uploads/<string:filename>")
+def user_getavatar_controller(filename):
+    try:
+        return send_from_directory("./uploads", filename)
+    except Exception as e:
+        return jsonify({'error': 'File not present. Please enter valid file name.'}), 400
