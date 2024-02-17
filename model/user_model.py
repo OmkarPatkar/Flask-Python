@@ -157,19 +157,3 @@ class user_model:
         #     # Close cursor and connection in the finally block to ensure it is always executed
         #     self.cursor.close()
         #     self.conn.close()
-
-    def user_upload_avatar_model(self, uid, file_with_path):
-        try:
-            update_query = "Update Users set avatar=? where id=?;"
-
-            self.cursor.execute(update_query, (file_with_path, uid))
-
-            print('File uploaded successfully')
-            if self.cursor.rowcount > 0:
-                return jsonify({'message': "File uploaded Successfully"}), 201
-            else:
-                return jsonify({"message": "No Records to Update. Please provide correct id."}), 202
-
-        except Exception as e:
-            print(f'Error in updating user: {e}')
-            return jsonify({'message': 'Failed to update user'}), 204
