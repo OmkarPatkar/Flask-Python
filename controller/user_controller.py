@@ -81,3 +81,8 @@ def user_getavatar_controller(filename):
         return send_from_directory("./uploads", filename)
     except Exception as e:
         return jsonify({'error': 'File not present. Please enter valid file name.'}), 400
+
+
+@app.route("/user/login", methods=["POST"])
+def user_login_controller():
+    return obj.user_login_model(request.form)

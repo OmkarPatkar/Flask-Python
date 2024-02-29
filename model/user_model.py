@@ -1,6 +1,9 @@
 import json
+
+import jwt
 import pyodbc
 from flask import jsonify
+from datetime import datetime, timedelta
 
 
 class user_model:
@@ -173,3 +176,39 @@ class user_model:
         except Exception as e:
             print(f'Error in updating user: {e}')
             return jsonify({'message': 'Failed to update user'}), 204
+
+    def user_login_model(self, data):
+        try:
+            query = "select id, name, email, phone, avatar, role_id from Users where email = ? and password = ?"
+            email = data.get('email')
+            password = data.get('password')
+            self.cursor.execute(query, (email, password))
+            row = self.cursor.fetchone()
+
+            if row:
+                userdata = {
+                    'id': row.id,
+                    'name': row.name,
+                    'email': row.email,
+                    'phone': row.phone,
+                    'avatar': row.avatar,
+                    'role_id': row.role_id
+                }
+
+                exp_time = datetime.now() + timedelta(minutes=15)
+                epoch_time = int(exp_time.timestamp())
+                payload = {'payload': userdata,
+                           'exp': epoch_time
+                           }
+                jwt_token = jwt.encode(payload, "patkar", algorithm="HS256")
+
+                if jwt_token:
+                    return jsonify({'token': jwt_token}), 200
+                else:
+                    return jsonify({"message": "Error generating token."}), 502
+            else:
+                return jsonify({'message': 'Invalid email or password.'}), 401
+
+        except Exception as e:
+            print(f'Error in login: {e}')
+            return jsonify({'message': 'Failed to login.'}), 500
