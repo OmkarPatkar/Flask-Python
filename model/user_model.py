@@ -1,5 +1,4 @@
 import json
-
 import jwt
 import pyodbc
 from flask import jsonify
@@ -28,9 +27,6 @@ class user_model:
             rows = self.cursor.fetchall()
 
             result = [dict(zip([column[0] for column in self.cursor.description], row)) for row in rows]
-
-            for row in rows:
-                print(row)
 
             if len(result) > 0:
                 return jsonify({'Payload': result}), 200
@@ -62,10 +58,6 @@ class user_model:
         except Exception as e:
             print(f'Error in creating user: {e}')
             return jsonify({'message': 'Failed to create user'}), 500
-        # finally:
-        #     # Close cursor and connection
-        #     self.cursor.close()
-        #     self.conn.close()
 
     def user_update_model(self, data):
         try:
@@ -90,10 +82,6 @@ class user_model:
         except Exception as e:
             print(f'Error in updating user: {e}')
             return jsonify({'message': 'Failed to update user'}), 204
-        # finally:
-        #     # Close cursor and connection
-        #     self.cursor.close()
-        #     self.conn.close()
 
     def user_delete_model(self, id):
         try:
@@ -112,10 +100,6 @@ class user_model:
         except Exception as e:
             print(f'Error in deleting user record: {e}')
             return jsonify({'message': 'Failed to delete user record'}), 500
-        # finally:
-        #     # Close cursor and connection
-        #     self.cursor.close()
-        #     self.conn.close()
 
     def user_patch_model(self, data, id):
         try:
@@ -134,11 +118,6 @@ class user_model:
         except Exception as e:
             print(e)
 
-        # finally:
-        #     # Close cursor and connection
-        #     self.cursor.close()
-        #     self.conn.close()
-
     def user_pagination_model(self, limit, page):
         try:
             start = (page - 1) * limit
@@ -156,10 +135,6 @@ class user_model:
         except Exception as e:
             print(f'Error in fetching records: {e}')
             return jsonify({"message": "Internal Server Error"}), 500  # Use status code 500 for internal server error
-        # finally:
-        #     # Close cursor and connection in the finally block to ensure it is always executed
-        #     self.cursor.close()
-        #     self.conn.close()
 
     def user_upload_avatar_model(self, uid, file_with_path):
         try:

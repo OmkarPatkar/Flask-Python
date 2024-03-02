@@ -2,13 +2,16 @@ import os.path
 
 from app import app
 from model.user_model import user_model
+from model.auth_model import auth_model
 from flask import request, jsonify, send_from_directory
 from datetime import datetime
 
 obj = user_model()
+auth = auth_model()
 
 
 @app.route("/user/getall")
+@auth.token_auth("/user/getall")
 def user_getall_controller():
     return obj.user_getall_model()
 
