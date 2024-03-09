@@ -11,24 +11,27 @@ auth = auth_model()
 
 
 @app.route("/user/getall")
-@auth.token_auth("/user/getall")
+@auth.token_auth()
 def user_getall_controller():
     return obj.user_getall_model()
 
 
 @app.route("/user/addone", methods=["POST"])
+@auth.token_auth()
 def user_addone_controller():
     data = request.form
     return obj.user_addone_model(data)
 
 
 @app.route("/user/update", methods=["PUT"])
+@auth.token_auth()
 def user_update_controller():
     data = request.form
     return obj.user_update_model(data)
 
 
 @app.route("/user/delete/<int:id>", methods=["DELETE"])
+@auth.token_auth()
 def user_delete_controller(id):
     return obj.user_delete_model(id)
 

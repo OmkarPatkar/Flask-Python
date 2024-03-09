@@ -46,10 +46,10 @@ class user_model:
             name = data.get('name')
             phone = data.get('phone')
             email = data.get('email')
-            role = data.get('role')
+            role = data.get('role_id')
             password = data.get('password')
 
-            insert_query = "insert into Users(name, phone, email, role, password) values (?, ?, ?, ?, ?);"
+            insert_query = "insert into Users(name, phone, email, role_id, password) values (?, ?, ?, ?, ?);"
 
             self.cursor.execute(insert_query, (name, phone, email, role, password))
 
@@ -64,12 +64,11 @@ class user_model:
             name = data.get('name')
             phone = data.get('phone')
             email = data.get('email')
-            role = data.get('role')
+            role = data.get('role_id')
             password = data.get('password')
             userid = data.get('id')
-            print(userid)
 
-            update_query = "Update Users set name=?, phone=?, email=?, role=?, password=? where id=?;"
+            update_query = "Update Users set name=?, phone=?, email=?, role_id=?, password=? where id=?;"
 
             self.cursor.execute(update_query, (name, phone, email, role, password, userid))
 
