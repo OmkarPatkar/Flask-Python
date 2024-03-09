@@ -37,10 +37,6 @@ class user_model:
         except Exception as e:
             print(f'Error in fetching users: {e}')
             return jsonify({'message': f'Error in fetching users: {e}'}), 500
-        # finally:
-        #     # Close cursor and connection
-        #     self.cursor.close()
-        #     self.conn.close()
 
     def user_addone_model(self, data):
         try:
@@ -59,6 +55,26 @@ class user_model:
         except Exception as e:
             print(f'Error in creating user: {e}')
             return jsonify({'message': 'Failed to create user'}), 500
+
+    def user_addmultiple_model(self, data):
+        try:
+            query = 'insert into Users(name, phone, email, role_id, password, avatar) values (?, ?, ?, ?, ?, ?);'
+            for userdata in data:
+                name = userdata['name']
+                phone = userdata['phone']
+                email = userdata['email']
+                role_id = userdata['role_id']
+                password = userdata['password']
+                avatar = userdata['avatar']
+                params = (name, phone, email, role_id, password, avatar)
+
+                self.cursor.execute(query, params)
+
+            print(f'Users added successfully.')
+            return jsonify({'message': 'Users added successfully'}), 201
+        except Exception as e:
+            print(f'Error in adding user: {e}')
+            return jsonify({'message': 'Failed to add user'}), 500
 
     def user_update_model(self, data):
         try:

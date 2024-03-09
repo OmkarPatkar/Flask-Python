@@ -22,6 +22,12 @@ def user_addone_controller():
     data = request.form
     return obj.user_addone_model(data)
 
+@app.route("/user/addmultiple", methods=["POST"])
+# @auth.token_auth()
+def user_addmultiple_controller():
+    data = request.json
+    return obj.user_addmultiple_model(data)
+
 
 @app.route("/user/update", methods=["PUT"])
 @auth.token_auth()

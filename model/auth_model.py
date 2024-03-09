@@ -51,7 +51,7 @@ class auth_model:
                             else:
                                 return jsonify({'message': 'invalid role'}), 404
                         else:
-                            return jsonify({'message': 'invalid endpoint'}), 404
+                            return jsonify({'message': 'invalid endpoint for the user.'}), 404
                 except Exception as e:
                     print(f'Error : {str(e)}')
                     return f'Error: {e}', 401
