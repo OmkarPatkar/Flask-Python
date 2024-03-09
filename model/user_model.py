@@ -3,16 +3,17 @@ import jwt
 import pyodbc
 from flask import jsonify
 from datetime import datetime, timedelta
+from config.config import db_config
 
 
 class user_model:
     def __init__(self):
         try:
             self.conn = pyodbc.connect(
-                r'DRIVER={SQL Server};'
-                r'SERVER=(local)\SQLEXPRESS;'
-                r'DATABASE=flask_app;'
-                r'Trusted_Connection=yes;'
+                r"DRIVER={" + db_config["DRIVER"] + "};"
+                r"SERVER=" + db_config["SERVER"] + ";"
+                r"DATABASE=" + db_config["DATABASE"] + ";"
+                r"Trusted_Connection=yes;"
             )
             self.conn.autocommit = True
             self.cursor = self.conn.cursor()

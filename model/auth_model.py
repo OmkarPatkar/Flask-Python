@@ -5,17 +5,18 @@ import pyodbc
 from functools import wraps
 from flask import jsonify, request
 from datetime import datetime, timedelta
+from config.config import db_config
 
 
 class auth_model:
     def __init__(self):
         try:
             self.conn = pyodbc.connect(
-                r'DRIVER={SQL Server};'
-                r'SERVER=(local)\SQLEXPRESS;'
-                r'DATABASE=flask_app;'
-                r'Trusted_Connection=yes;'
-            )
+                    r"DRIVER={" + db_config["DRIVER"] + "};"
+                    r"SERVER=" + db_config["SERVER"] + ";"
+                    r"DATABASE=" + db_config["DATABASE"] + ";"
+                    r"Trusted_Connection=yes;"
+                )
             self.conn.autocommit = True
             self.cursor = self.conn.cursor()
             print('Connection Established Successfully')
